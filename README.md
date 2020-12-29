@@ -1,5 +1,5 @@
 # Powershell & Power Automate (Flow) to consume Power BI Asynchronous Unified Scanning API
-This solution provides a basis for your Power BI monitoring needs, based on the newly released Admin APIs.
+This solution provides a basis for your Power BI monitoring needs, based on the newly released Admin APIs. I created the solution in Power Automate and in Powershell for you, choose one!
 
 Benefits of the new API:
 1) It's easy to setup: only an application registration in Azure AD, security group and Power BI Admin setting, no per workspace permissions required
@@ -16,8 +16,6 @@ In short, what the solution does:
 2) Split workspaces in batches of 100 and request details. 
 3) Retrieve details in separate loop, since the API is asynchronous.
 4) Output to JSON file.
-
-I created the solution in Power Automate and in Powershell for you, choose one!
 
 The solution has one dependency
 1) Created an application registration (WITHOUT API permissions in Azure AD), put in a security group and have the security group in the Power BI Admin settings enabled for the use of the read-only Admin APIs, see blog post mentioned above.
