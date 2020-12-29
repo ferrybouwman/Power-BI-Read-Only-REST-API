@@ -1,7 +1,7 @@
 $modifiedSince = "2020-12-29T13:02:38.3525654Z" # 24 hour time notation, max 30 days in the past, use 'all' to retrieve everything
 
 $response = Invoke-WebRequest `
-    -Uri "paste HTTP GET URL from FLOW" `
+    -Uri "paste HTTP GET URL from FLOW, replace {modifiedSince} with $modifiedSince" `
     -Method Get `
     -ContentType application/json
 
