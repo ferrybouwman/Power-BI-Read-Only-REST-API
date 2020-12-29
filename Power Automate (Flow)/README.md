@@ -1,4 +1,4 @@
-# Power Automate / Flow export file to consume Power BI Asynchronous Unified Scanning API
+# Power Automate / Flow to consume Power BI Asynchronous Unified Scanning API
 This flow provides a basis for your Power BI monitoring needs, based on the newly released Admin APIs.
 
 For more information, check this blog post:
