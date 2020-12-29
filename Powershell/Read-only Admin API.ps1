@@ -1,4 +1,4 @@
-﻿### variabelen
+### set variables
 $tenantId = "insert organization.onmicrosoft.com"
 $clientId = "inset client id"
 $clientSecret = "insert client secret"
@@ -9,15 +9,16 @@ $folderPath = "D:\temp"
 
 
 
-### STAP 1: Lijst met workspace Id's opvragen die gewijzigd zijn t.o.v. modifiedSince datum. Zonder modifiedSince krijg je alles terug (gaat snel).
+### STEP 1: Retrieve list with workspace Ids which have been modified since a given date (optionally). Without modifiedSince essentially you will get a full metadata snapshot.
 
-$parameter = "?modifiedSince=$(Get-Content $folderPath\modifiedSince.json)"
+# get modifiedSince from locally stored file
+$parameter = "?modifiedSince=$(Get-Content $folderPath\modifiedSince.txt)"
 $parameter = "" # uncomment this line when retrieving everything
 
-# log tijdstip van bovenstaand request. Schrijf deze weg naar een bestand zodat deze de volgende keer gebruikt kan worden voor modifiedSince
-$newModifiedSince = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffK") | Out-File $folderPath\modifiedSince.json
+# log timestamp of above request. Store in file for re-use when this script runs again.
+$newModifiedSince = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffK") | Out-File $folderPath\modifiedSince.txt
 
-# haal workspaces op
+# Call /modified endpoint to retrieve workspaces
 $modifiedWorkspaces = Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/modified" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
 
 
@@ -25,15 +26,19 @@ $modifiedWorkspaces = Invoke-PBIRequest -authToken $authToken -resource ("admin/
 
 
 
-### STAP 2: Per 100 workspaces de details opvragen. API is asynchroon, dus eerst opvragen en daarna met separate loop de resultaten ophalen
-$batchCount = $modifiedWorkspaces.Count / 100
-Write-Host "Processing $([math]::Ceiling($batchCount)) batches of 0..100" -ForegroundColor White
-if ($batchCount -lt 1) {$batchCount = 1}
+### STEP 2: Retrieve details per batch of 100 workspaces. API is asynchronous, so request first, then retrieve later in a separate loop.
+
+# determine amount of batches
+$batchCount = [math]::Ceiling($modifiedWorkspaces.Count / 100)
+Write-Host "Processing $($batchCount) batches of 0..100" -ForegroundColor White
+
+# create array
 $workspaceInfoRequests = @()
 
+# loop through batches
 for ($i=0;$i -lt $batchCount;$i++) {
 
-    
+    #create json body with workspace IDs corresponding to batch
     $body = 
 @"
 {
@@ -41,20 +46,25 @@ for ($i=0;$i -lt $batchCount;$i++) {
 }
 "@
     
+	# we want lineage and datasource details
     $parameter = "?lineage=True&datasourceDetails=True"
+	# Call /getInfo API
     $workspaceInfoRequests += Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/getInfo" + $parameter) -method Post -body $body -scope Admin -contentType "application/json" -ignoreGroup
 
+	# wait a little bit, since the API has a limit, not thoroughly tested, but this prevented the occasionally thrown errors
     start-sleep -ms 200
-
     Write-Host "Batch $($i)" -ForegroundColor White
 
 }
 
 
-### STAP 3: Resultaten van alle aanvragen ophalen
+### STEP 3: Fetch results of earlier requests
+
+#create array in which we append all received data
 $workspaceInfo = @()
 $count = 1
 
+# loop through all earlier requests
 foreach ($workspaceInfoRequest in $workspaceInfoRequests) {
 
     Write-Host "Getting batch $($count) with id $($workspaceInfoRequest.id)" -ForegroundColor White
@@ -62,6 +72,7 @@ foreach ($workspaceInfoRequest in $workspaceInfoRequests) {
     $parameter = "/" + $workspaceInfoRequest.id
     #$status = Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/scanStatus" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
 
+	# Check if the request is processed already, otherwise wait 5 seconds and check again
     while ($status.status -ne "Succeeded") { # 5 seconden wachten indien het antwoord nog niet klaar staat (op dit moment is de API nog heel snel)
 
         $status = Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/scanStatus" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
@@ -71,6 +82,7 @@ foreach ($workspaceInfoRequest in $workspaceInfoRequests) {
 
     }
 
+	# when ready, retrieve data and add to array
     $workspaceInfo += Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/scanResult" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
     Write-Host "Batch received" -ForegroundColor Green
 
@@ -78,5 +90,5 @@ foreach ($workspaceInfoRequest in $workspaceInfoRequests) {
 
 }
 
-# wegschrijven resultaat naar JSON bestand
-$workspaceInfo | ConvertTo-Json -Depth 10 | Out-File $folderPath\reportingAPI_$(Get-Date -Format "yyyyMMddHHmmss").json
+# output results to JSON file
+$workspaceInfo | ConvertTo-Json -Depth 10 | Out-File $folderPath\PBI_API_output_$(Get-Date -Format "yyyyMMddHHmmss").json
