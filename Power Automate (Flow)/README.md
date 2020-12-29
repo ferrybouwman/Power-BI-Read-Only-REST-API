@@ -14,3 +14,11 @@ In short, what this flow does:
 
 This flow has one dependency
 1) Created an application registration (WITHOUT API permissions in Azure AD), put in a security group and have the security group in the Power BI Admin settings enabled for the use of the read-only Admin APIs, see blog post mentioned above.
+
+How to use?
+1) Download zip file from this repository.
+2) Import into Power Automate.
+3) Set 3 variables: tenant, clientId, clientSecret.
+4) Copy HTTP GET URL from trigger (first step) and paste somewhere.
+5) Turn on flow.
+6) Call this flow from another (scheduled) flow or a script, or DIRECTLY from Power BI. Examples included in repository.
