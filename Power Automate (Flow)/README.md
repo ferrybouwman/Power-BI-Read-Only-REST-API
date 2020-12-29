@@ -6,7 +6,7 @@ https://powerbi.microsoft.com/en-us/blog/announcing-new-admin-apis-and-service-p
 
 In short, what this flow does:
 
-1) Receive a HTTP request (so you can have this flow triggered by a separate scheduled flow, or by directly consuming this flow in Power BI, more on this below).
+1) Receive a HTTP request (so you can have this flow triggered by a separate scheduled flow, or by directly consuming this flow in Power BI, see example). Currently, there seems to be a limit in Power Automate which cuts off requests that take longer then 2 minutes to progress. When you need a regular, scheduled, full retrieval of all your tenant's data, make the flow scheduled instead of HTTP triggered, in particular for large environments.
 2) Retrieve list with workspace Ids which have been modified since a given date, or a full report.
 3) Split workspaces in batches of 100 and request details. 
 4) Retrieve details in separate loop, since the API is asynchronous.
