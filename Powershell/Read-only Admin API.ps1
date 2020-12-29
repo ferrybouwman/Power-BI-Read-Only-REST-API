@@ -13,7 +13,7 @@ $folderPath = "D:\temp"
 
 # get modifiedSince from locally stored file
 $parameter = "?modifiedSince=$(Get-Content $folderPath\modifiedSince.txt)"
-$parameter = "" # uncomment this line when retrieving everything
+#$parameter = "" # uncomment this line when retrieving everything
 
 # log timestamp of above request. Store in file for re-use when this script runs again.
 $newModifiedSince = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffffK") | Out-File $folderPath\modifiedSince.txt
