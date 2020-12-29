@@ -17,5 +17,7 @@ In short, what the solution does:
 3) Retrieve details in separate loop, since the API is asynchronous.
 4) Output to JSON file.
 
+I created the solution in Power Automate and in Powershell for you, choose one!
+
 The solution has one dependency
 1) Created an application registration (WITHOUT API permissions in Azure AD), put in a security group and have the security group in the Power BI Admin settings enabled for the use of the read-only Admin APIs, see blog post mentioned above.
