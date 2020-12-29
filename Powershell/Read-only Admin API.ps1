@@ -73,7 +73,7 @@ foreach ($workspaceInfoRequest in $workspaceInfoRequests) {
     #$status = Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/scanStatus" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
 
 	# Check if the request is processed already, otherwise wait 5 seconds and check again
-    while ($status.status -ne "Succeeded") { # 5 seconden wachten indien het antwoord nog niet klaar staat (op dit moment is de API nog heel snel)
+    while ($status.status -ne "Succeeded") {
 
         $status = Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/scanStatus" + $parameter) -method Get -scope Admin -contentType "application/json" -ignoreGroup
         start-sleep 5
