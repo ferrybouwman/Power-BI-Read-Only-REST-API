@@ -1,4 +1,4 @@
-$modifiedSince = "2020-12-29T13:02:38.3525654Z" # 24 hour time notation
+$modifiedSince = "2020-12-29T13:02:38.3525654Z" # 24 hour time notation, use 'all' to retrieve everything
 
 $response = Invoke-WebRequest `
     -Uri "paste HTTP GET URL from FLOW" `
