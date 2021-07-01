@@ -22,3 +22,4 @@ How to use?
 4) Copy HTTP GET URL from trigger (first step) and paste somewhere.
 5) Turn on flow.
 6) Call this flow from another (scheduled) flow or a script, or DIRECTLY from Power BI. Examples included in repository.
+7) Optional since July 1st: Add "&datasetSchema=true&datasetExpressions=true" to the query to obtain DAX and M expressions.
