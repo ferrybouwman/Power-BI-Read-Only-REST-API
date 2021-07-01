@@ -47,7 +47,7 @@ for ($i=0;$i -lt $batchCount;$i++) {
 "@
     
 	# we want lineage and datasource details
-    $parameter = "?lineage=True&datasourceDetails=True"
+    $parameter = "?lineage=True&datasourceDetails=True&datasetSchema=true&datasetExpressions=true"
 	# Call /getInfo API
     $workspaceInfoRequests += Invoke-PBIRequest -authToken $authToken -resource ("admin/workspaces/getInfo" + $parameter) -method Post -body $body -scope Admin -contentType "application/json" -ignoreGroup
 
