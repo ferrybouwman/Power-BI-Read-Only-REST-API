@@ -5,7 +5,7 @@ Benefits of the new API:
 1) It's easy to setup: only an application registration in Azure AD, security group and Power BI Admin setting, no per workspace permissions required
 2) It's easy to use: no signed in user (delegation), and thus easy to consume within Power Automate without custom connectors (HTTP connector is premium though)
 3) More secure: no admin account necessary and read-only
-4) It's fast! I read almost 6000 workspaces including metadata about content within minutes.
+4) It's fast! I read almost 6000 workspaces including metadata within minutes.
 
 For more information about the new API, check this blog post:
 https://powerbi.microsoft.com/en-us/blog/announcing-new-admin-apis-and-service-principal-authentication-to-make-for-better-tenant-metadata-scanning/
