@@ -18,8 +18,8 @@ This flow has one dependency
 How to use?
 1) Download zip file from this repository.
 2) Import into Power Automate.
-3) Set 3 variables: tenant, clientId, clientSecret.
+3) Set 3 variables: tenant, clientId, clientSecret. Optional: Add "&datasetSchema=true&datasetExpressions=true" to the HTTP request to obtain DAX and M expressions.
 4) Copy HTTP GET URL from trigger (first step) and paste somewhere.
 5) Turn on flow.
 6) Call this flow from another (scheduled) flow or a script, or DIRECTLY from Power BI. Examples included in repository.
-7) Optional since July 1st: Add "&datasetSchema=true&datasetExpressions=true" to the query to obtain DAX and M expressions.
+S
